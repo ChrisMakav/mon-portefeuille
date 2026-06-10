@@ -1,0 +1,115 @@
+/**
+ * Design Tokens — Mon Portefeuille Design System
+ * ─────────────────────────────────────────────────
+ * Stack: Next.js 16 · React 19 · Tailwind CSS v4 · TypeScript
+ *
+ * This file is the single source of truth for all design tokens.
+ * It uses Tailwind v4's @theme block so every token becomes a
+ * utility class automatically:
+ *
+ *   --color-accent  →  bg-accent  text-accent  border-accent  ring-accent
+ *   --font-display  →  font-display
+ *   --radius-pill   →  rounded-pill
+ *   --shadow-glow   →  shadow-glow
+ *
+ * Import this file in app/globals.css after @import "tailwindcss".
+ */
+
+@theme {
+  /* ─────────────────────────────────────────────────────────
+     COLORS
+     ───────────────────────────────────────────────────────── */
+
+  /* Backgrounds — darkest to lightest elevation */
+  --color-void:           #080A0B;   /* page root background */
+  --color-surface:        #111416;   /* default card / panel */
+  --color-surface-raised: #181C1F;   /* elevated card, dropdown */
+  --color-overlay:        #1F2428;   /* highest elevation, modal bg */
+
+  /* Foreground / Text */
+  --color-fg:             #F2F4F6;   /* headings, primary UI labels */
+  --color-fg-muted:       #7A8694;   /* body copy, descriptions */
+  --color-fg-subtle:      #414D5A;   /* placeholders, disabled states */
+  --color-fg-inverse:     #080A0B;   /* text placed on accent fills */
+
+  /* Lines / Borders */
+  --color-line:           #232830;   /* hairline, subtle dividers */
+  --color-line-strong:    #363D47;   /* visible card borders */
+  --color-line-focus:     #C1FF2F;   /* keyboard focus ring */
+
+  /* Accent — Electric Chartreuse */
+  --color-accent:         #C1FF2F;
+  --color-accent-hover:   #D4FF5C;
+  --color-accent-active:  #A8E81A;
+  --color-accent-tint:    #C1FF2F1A; /* ~10% opacity, for tinted backgrounds */
+
+  /* Status */
+  --color-success:        #34D399;
+  --color-warning:        #FBBF24;
+  --color-danger:         #F87171;
+  --color-info:           #60A5FA;
+
+  /* ─────────────────────────────────────────────────────────
+     TYPOGRAPHY
+     ───────────────────────────────────────────────────────── */
+
+  /* Font families */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-sans:    'Outfit', system-ui, sans-serif;
+  --font-mono:    'Space Mono', 'Courier New', monospace;
+
+  /* Type scale
+     Custom sizes sit alongside Tailwind defaults (text-sm, text-base…).
+     Use the --line-height companion variable to set leading per step. */
+  --text-label:   0.6875rem;  /* 11px — all-caps labels, tags */
+  --text-caption: 0.75rem;    /* 12px — timestamps, metadata */
+  --text-display: clamp(5rem, 14vw, 11rem);   /* hero name, section titles */
+  --text-display--line-height: 0.88;
+
+  /* ─────────────────────────────────────────────────────────
+     SPACING
+     ───────────────────────────────────────────────────────── */
+
+  /* Fluid section padding — shrinks gracefully on smaller viewports */
+  --spacing-section:    clamp(4rem, 10vw, 8rem);
+  --spacing-container:  clamp(1.5rem, 5vw, 4rem);
+
+  /* ─────────────────────────────────────────────────────────
+     BORDER RADIUS
+     ───────────────────────────────────────────────────────── */
+
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   18px;
+  --radius-2xl:  28px;
+  --radius-pill: 9999px;
+
+  /* ─────────────────────────────────────────────────────────
+     SHADOWS
+     ───────────────────────────────────────────────────────── */
+
+  --shadow-sm:          0 1px 4px rgba(0, 0, 0, 0.45);
+  --shadow-md:          0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg:          0 8px 32px rgba(0, 0, 0, 0.65);
+  --shadow-xl:          0 16px 56px rgba(0, 0, 0, 0.75);
+  --shadow-glow:        0 0 20px rgba(193, 255, 47, 0.22);
+  --shadow-glow-strong: 0 0 40px rgba(193, 255, 47, 0.38);
+
+  /* ─────────────────────────────────────────────────────────
+     MOTION / ANIMATION
+     ───────────────────────────────────────────────────────── */
+
+  /* Easing curves */
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Durations */
+  --duration-instant: 0ms;
+  --duration-fast:    100ms;
+  --duration-base:    200ms;
+  --duration-slow:    350ms;
+  --duration-slower:  550ms;
+}

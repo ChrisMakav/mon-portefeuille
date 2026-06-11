@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
+import { N8nChat } from "@/components/N8nChat";
 
 const barlowCondensed = Barlow_Condensed({
   weight: ["400", "600", "700", "800"],
@@ -48,6 +49,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-void text-fg">
         {children}
+        <N8nChat />
       </body>
     </html>
   );

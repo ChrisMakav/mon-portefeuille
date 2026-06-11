@@ -1,13 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
-import "@n8n/chat/style.css";
+
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ?? "";
 
 export function N8nChat() {
   useEffect(() => {
+    if (!WEBHOOK_URL) return;
+
+    // Dynamically import the CSS and the widget to keep it purely client-side
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://cdn.jsdelivr.net/npm/@n8n/chat@1.24.2/dist/style.css";
+    document.head.appendChild(link);
+
     import("@n8n/chat").then(({ createChat }) => {
       createChat({
-        webhookUrl: process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL!,
+        webhookUrl: WEBHOOK_URL,
         mode: "window",
         showWelcomeScreen: false,
         defaultLanguage: "en",

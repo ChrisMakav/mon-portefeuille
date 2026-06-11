@@ -89,8 +89,8 @@ export const projects: Project[] = [
   },
   {
     id: "likelemba",
-    image: "/images/project-placeholder.svg",
-    imageAlt: "Interface de la plateforme Likelemba",
+    image: "/images/project-likelemba.png",
+    imageAlt: "Likelemba — Plateforme de cagnottes et tontines en ligne",
     category: "Développement Web",
     title: "Likelemba — Plateforme de Tontine en Ligne",
     client: "MAKAV Service Digital — Projet fondateur",

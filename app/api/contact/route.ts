@@ -10,8 +10,15 @@ export async function POST(request: NextRequest) {
       return Response.json({ ok: false, error: "Missing fields" }, { status: 400 });
     }
 
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error("Missing GMAIL_USER or GMAIL_APP_PASSWORD env vars");
+      return Response.json({ ok: false, error: "Server misconfiguration" }, { status: 500 });
+    }
+
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,

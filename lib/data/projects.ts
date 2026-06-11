@@ -16,6 +16,29 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "2f-auto-workflows",
+    image: "/images/project-2f-auto.png",
+    imageAlt: "Workflow n8n — Automatisation prise de rendez-vous 2F Auto",
+    category: "Digitalisation & Automatisation",
+    title: "2F Auto — Automatisation des Activités d'un Garage en Croissance",
+    client: "2F Auto — Garage Automobile",
+    year: "2025–2026",
+    summary:
+      "Conception et déploiement de plusieurs workflows n8n pour automatiser les activités opérationnelles de 2F Auto : prise de rendez-vous clients, confirmations automatiques par email, gestion de l'agenda et suivi des interventions.",
+    challenge:
+      "2F Auto connaît une forte croissance de son activité et ne peut plus gérer manuellement les demandes de rendez-vous, les confirmations clients et le suivi des interventions. La charge administrative freine la croissance et mobilise du temps qui devrait être consacré à la mécanique.",
+    solution:
+      "Développement d'un chatbot IA intégré au site web, connecté à des workflows n8n : collecte automatique des informations client (nom, véhicule, type d'intervention, créneau souhaité), création du rendez-vous dans Google Calendar, envoi d'un email de confirmation personnalisé, et centralisation des données dans une base de suivi. Chaque workflow est publié et monitoré en temps réel depuis n8n.",
+    results: [
+      "Prise de rendez-vous 24h/7j sans intervention humaine",
+      "Confirmation email automatique à chaque réservation",
+      "Agenda Google Calendar synchronisé en temps réel",
+      "Zéro appel téléphonique pour les réservations standard",
+      "Données clients centralisées pour le suivi des interventions",
+    ],
+    technologies: ["n8n", "Google Calendar", "Gmail", "IA", "Automatisation", "Chatbot"],
+  },
+  {
     id: "mabk-gmao",
     image: "/images/project-mabk-erp.png",
     imageAlt: "MABK GMAO — Gestion de Maintenance Assistée par Ordinateur pour PME et TPE",

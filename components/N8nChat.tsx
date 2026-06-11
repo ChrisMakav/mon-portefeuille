@@ -48,7 +48,7 @@ const STYLE_OVERRIDES = `
     --chat--toggle--border-radius:      50%;
 
     --chat--window--width:              380px;
-    --chat--window--height:             580px;
+    --chat--window--height:             600px;
     --chat--window--border:             1px solid #232830;
     --chat--window--border-radius:      16px;
 
@@ -73,22 +73,38 @@ const STYLE_OVERRIDES = `
     --chat--transition-duration: 0.2s;
   }
 
-  /* Force input area visible */
+  /* Force input area visible and accessible */
   .chat-input,
   [class*="chat-input"],
   [class*="chat__input"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
     background: #111416 !important;
-    color: #F2F4F6 !important;
     border-top: 1px solid #232830 !important;
+    min-height: 56px !important;
   }
   [class*="chat-input"] textarea,
   [class*="chat-input"] input {
-    background: #111416 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
     color: #F2F4F6 !important;
+    background: transparent !important;
+    min-height: 40px !important;
   }
   [class*="chat-input"] textarea::placeholder,
   [class*="chat-input"] input::placeholder {
     color: #414D5A !important;
+  }
+  /* Ensure message list doesn't overflow and crush the input */
+  [class*="chat-messages"],
+  [class*="chat__messages"] {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    max-height: calc(var(--chat--window--height) - 180px) !important;
   }
 `;
 
@@ -117,7 +133,7 @@ export function N8nChat() {
         mode: "window",
         showWelcomeScreen: false,
         defaultLanguage: "en",
-        loadPreviousSession: true,
+        loadPreviousSession: false,
         initialMessages: [
           "Bonjour 👋 Je suis l'assistant de Rachide Mabila.",
           "Posez-moi vos questions sur ses services, son expertise ou sa disponibilité — je suis là pour vous aider."

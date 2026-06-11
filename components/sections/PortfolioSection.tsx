@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -18,15 +19,22 @@ function ProjectThumbnail({ project, onExpand }: { project: Project; onExpand: (
         onClick={onExpand}
         aria-label={`Voir l'étude de cas : ${project.title}`}
       >
-        <span
-          className="font-display text-5xl font-black text-accent/10 select-none transition-transform duration-[350ms] group-hover:scale-110"
-          aria-hidden="true"
-        >
-          {project.category[0]}
-        </span>
-        {/* TODO: Replace with Image when you add real screenshots
-        <Image src={project.image} alt={project.imageAlt} fill className="object-cover transition-transform duration-[350ms] group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
-        */}
+        {project.image && !project.image.includes("placeholder") ? (
+          <Image
+            src={project.image}
+            alt={project.imageAlt}
+            fill
+            className="object-cover transition-transform duration-[350ms] group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        ) : (
+          <span
+            className="font-display text-5xl font-black text-accent/10 select-none transition-transform duration-[350ms] group-hover:scale-110"
+            aria-hidden="true"
+          >
+            {project.category[0]}
+          </span>
+        )}
       </button>
 
       <div className="flex flex-col gap-3 p-5 flex-1">

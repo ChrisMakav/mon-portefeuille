@@ -200,6 +200,29 @@ export const projects: Project[] = [
     technologies: ["MS Project", "SAP", "QRQC", "5M", "Lean", "Amélioration continue"],
   },
   {
+    id: "flowserve-pompes",
+    image: "/images/project-flowserve.png",
+    imageAlt: "Flowserve — Fabrication de pompes hydrauliques industrielles, Le Mans",
+    category: "Gestion de Projet",
+    title: "Chef de Projet Fabrication Pompes Hydrauliques — Flowserve",
+    client: "Flowserve Pompe — Le Mans",
+    year: "2017",
+    summary:
+      "Chef de projet chez Flowserve (leader mondial des équipements de contrôle de flux) pour la gestion de projets de fabrication de pompes hydrauliques industrielles : pilotage de la phase offre jusqu'à la livraison client.",
+    challenge:
+      "Flowserve fabrique des pompes industrielles critiques pour des secteurs exigeants (pétrole & gaz, énergie, chimie). La gestion de ces projets implique une coordination étroite entre les équipes de conception, de production et les clients internationaux, avec des exigences strictes en matière de délais, qualité et conformité aux normes (ANSI, API, ASME).",
+    solution:
+      "Pilotage complet des projets de fabrication : revue contractuelle à la prise de commande, suivi de production en atelier, coordination des interfaces entre bureau d'études et production, gestion des écarts et des ordres de modification, reporting régulier aux clients et aux comités de direction, et réception des équipements (FAT — Factory Acceptance Test).",
+    results: [
+      "Projets de fabrication livrés dans le respect des engagements QCD",
+      "Revues contractuelles et gestion des ordres de changement",
+      "Coordination production/bureau d'études pour tous les paquets équipements",
+      "Reporting client structuré à chaque jalon de fabrication",
+      "Conformité aux normes ANSI, API, ASME vérifiée à chaque étape",
+    ],
+    technologies: ["MS Project", "Primavera P6", "ANSI / API / ASME", "FAT", "Gestion contractuelle", "KPI"],
+  },
+  {
     id: "ge-energy-turbines",
     image: "/images/project-ge-energy.jpg",
     imageAlt: "Turbine à gaz GE Energy — rotor en atelier d'assemblage",

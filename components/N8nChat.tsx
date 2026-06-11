@@ -3,27 +3,32 @@
 import { useEffect } from "react";
 
 const WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ?? "";
+const CDN = "https://cdn.jsdelivr.net/npm/@n8n/chat@1.24.2/dist";
 
 export function N8nChat() {
   useEffect(() => {
     if (!WEBHOOK_URL) return;
 
-    // Dynamically import the CSS and the widget to keep it purely client-side
+    // CSS via CDN
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://cdn.jsdelivr.net/npm/@n8n/chat@1.24.2/dist/style.css";
+    link.href = `${CDN}/style.css`;
     document.head.appendChild(link);
 
-    import("@n8n/chat").then(({ createChat }) => {
+    // Widget loaded as an ES module script — bypasses Next.js bundler entirely
+    const script = document.createElement("script");
+    script.type = "module";
+    script.innerHTML = `
+      import { createChat } from '${CDN}/chat.bundle.es.js';
       createChat({
-        webhookUrl: WEBHOOK_URL,
+        webhookUrl: "${WEBHOOK_URL}",
         mode: "window",
         showWelcomeScreen: false,
         defaultLanguage: "en",
         loadPreviousSession: true,
         initialMessages: [
           "Bonjour 👋 Je suis l'assistant de Rachide Mabila.",
-          "Posez-moi vos questions sur ses services, son expertise ou sa disponibilité — je suis là pour vous aider.",
+          "Posez-moi vos questions sur ses services, son expertise ou sa disponibilité — je suis là pour vous aider."
         ],
         i18n: {
           en: {
@@ -32,11 +37,17 @@ export function N8nChat() {
             footer: "",
             getStarted: "Démarrer une conversation",
             inputPlaceholder: "Écrivez votre question...",
-            closeButtonTooltip: "Fermer",
-          },
-        },
+            closeButtonTooltip: "Fermer"
+          }
+        }
       });
-    });
+    `;
+    document.body.appendChild(script);
+
+    return () => {
+      document.head.removeChild(link);
+      document.body.removeChild(script);
+    };
   }, []);
 
   return null;

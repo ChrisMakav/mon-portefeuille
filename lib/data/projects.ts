@@ -16,6 +16,30 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "mabk-cafe",
+    image: "/images/project-mabk-cafe.png",
+    imageAlt: "Site web MAB-K Café — Café de spécialité Paris 11e",
+    category: "Digitalisation & Automatisation",
+    title: "MAB-K Café — Digitalisation & Site Vitrine",
+    client: "MAB-K Café — Paris 11e",
+    year: "2024",
+    summary:
+      "Conception du site vitrine et mise en place d'un écosystème digital complet pour un café de spécialité parisien : présence en ligne, automatisation des réservations et intégration d'un assistant IA via n8n.",
+    challenge:
+      "MAB-K Café, établissement haut de gamme spécialisé dans le café d'exception, n'avait aucune présence digitale structurée. Les réservations se faisaient par téléphone, la communication des événements (open mic, dégustations) reposait sur le bouche-à-oreille, et aucun outil ne permettait de fidéliser la clientèle en dehors des réseaux sociaux.",
+    solution:
+      "Développement d'un site vitrine moderne avec Next.js, design soigné reflétant le positionnement premium de l'établissement. Intégration d'un workflow n8n pour l'automatisation des confirmations de réservation, mise en place d'un chatbot IA répondant aux questions fréquentes (horaires, menu, événements), et déploiement sur Vercel pour une performance maximale.",
+    results: [
+      "Site en production — accessible sur mab-cofee.vercel.app",
+      "Réservations en ligne avec confirmation automatique par email",
+      "Chatbot IA disponible 24h/7j pour renseigner les clients",
+      "Communication des événements hebdomadaires intégrée au site",
+      "Zéro appel téléphonique pour les réservations standard",
+    ],
+    technologies: ["Next.js", "Vercel", "n8n", "IA", "Automatisation", "Nodemailer"],
+    href: "https://mab-cofee.vercel.app/",
+  },
+  {
     id: "likelemba",
     image: "/images/project-placeholder.svg",
     imageAlt: "Interface de la plateforme Likelemba",

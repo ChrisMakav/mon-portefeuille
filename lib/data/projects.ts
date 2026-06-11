@@ -40,6 +40,30 @@ export const projects: Project[] = [
     href: "https://mab-cofee.vercel.app/",
   },
   {
+    id: "budget-platform",
+    image: "/images/project-budget-platform.png",
+    imageAlt: "BudgetFlow — Plateforme de gestion budgétaire et financière",
+    category: "Développement Web",
+    title: "BudgetFlow — Plateforme de Gestion Budgétaire",
+    client: "MAKAV Service Digital — Projet interne",
+    year: "2025–2026",
+    summary:
+      "Conception et développement d'une application web de gestion financière personnelle et professionnelle : suivi des revenus, dépenses, budgets par catégorie et analyses en temps réel.",
+    challenge:
+      "Les outils de gestion budgétaire disponibles sont soit trop complexes pour une PME ou un particulier, soit trop limités pour offrir une visibilité réelle sur la santé financière. L'enjeu était de créer une solution intuitive, visuelle et en euros, permettant de suivre ses finances sans formation particulière.",
+    solution:
+      "Développement d'un dashboard financier complet avec Next.js : vue consolidée du solde, suivi mensuel des revenus et dépenses avec indicateurs de tendance, gestion de budgets par catégorie avec barres de progression, historique des transactions, graphiques d'évolution du solde et taux d'épargne calculé automatiquement. Interface responsive déployée sur Vercel.",
+    results: [
+      "Dashboard en temps réel : solde, revenus, dépenses et taux d'épargne",
+      "Gestion multi-catégories avec suivi de l'utilisation des budgets",
+      "Visualisation graphique de l'évolution financière sur 6 mois",
+      "Taux d'épargne mesuré à 66,9% sur la période de démo",
+      "Application déployée en production sur Vercel",
+    ],
+    technologies: ["Next.js", "React", "TypeScript", "Recharts", "Tailwind CSS", "Vercel"],
+    href: "https://budget-platform-nine.vercel.app/dashboard",
+  },
+  {
     id: "likelemba",
     image: "/images/project-placeholder.svg",
     imageAlt: "Interface de la plateforme Likelemba",

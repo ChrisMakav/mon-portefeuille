@@ -132,8 +132,8 @@ export const projects: Project[] = [
   },
   {
     id: "zodiac-programme",
-    image: "/images/project-placeholder.svg",
-    imageAlt: "Gestion programme Zodiac Aerospace",
+    image: "/images/zodiacAerospace.png",
+    imageAlt: "Stand Zodiac Aerospace — sièges avion et showroom programme aéronautique",
     category: "Gestion de Projet",
     title: "Responsable Programme Aéronautique — Zodiac Aerospace",
     client: "Zodiac Aerospace (Safran) — Programmes avionneurs",

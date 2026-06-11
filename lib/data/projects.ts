@@ -88,8 +88,8 @@ export const projects: Project[] = [
   },
   {
     id: "wabtec-outils-web",
-    image: "/images/project-placeholder.svg",
-    imageAlt: "Interface de gestion des outils internes Wabtec",
+    image: "/images/project-wabtec.jpg",
+    imageAlt: "Stand Wabtec Station — salon ferroviaire InnoTrans",
     category: "Transformation Digitale",
     title: "Digitalisation des Outils Internes — Wabtec",
     client: "Wabtec Corporation — Saint-Pierre-des-Corps",
@@ -154,8 +154,8 @@ export const projects: Project[] = [
   },
   {
     id: "ge-energy-turbines",
-    image: "/images/project-placeholder.svg",
-    imageAlt: "Projet GE Energy turbines à gaz",
+    image: "/images/project-ge-energy.jpg",
+    imageAlt: "Turbine à gaz GE Energy — rotor en atelier d'assemblage",
     category: "Gestion de Projet",
     title: "Chef de Projet EPCC Centrale Électrique — GE Energy",
     client: "GE Energy — Projets Ichthys LNG & BARZAN CCGT",

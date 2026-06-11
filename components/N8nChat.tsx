@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-const WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ?? "";
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_CHAT_WEBHOOK_URL ?? "";
 const CDN = "https://cdn.jsdelivr.net/npm/@n8n/chat@1.24.2/dist";
 
 // CSS overrides injected AFTER the CDN stylesheet so our variables win

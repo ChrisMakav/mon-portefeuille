@@ -110,8 +110,8 @@ export const projects: Project[] = [
   },
   {
     id: "total-moho-nord",
-    image: "/images/project-placeholder.svg",
-    imageAlt: "Projet MOHO NORD Total E&P",
+    image: "/images/project-moho-nord.jpg",
+    imageAlt: "Plateforme TLP MOHO NORD — Total E&P, République du Congo",
     category: "Gestion de Projet",
     title: "Contrôle Projet MOHO NORD — Total E&P",
     client: "Total E&P — Projet offshore EPCC (Corée du Sud)",

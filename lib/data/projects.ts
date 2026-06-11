@@ -16,6 +16,30 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "mabk-gmao",
+    image: "/images/project-mabk-erp.png",
+    imageAlt: "MABK GMAO — Gestion de Maintenance Assistée par Ordinateur pour PME et TPE",
+    category: "Développement Web",
+    title: "MABK GMAO — Plateforme de Maintenance pour PME & TPE",
+    client: "MAKAV Service Digital — Projet produit",
+    year: "2025–2026",
+    summary:
+      "Conception et développement d'une application GMAO (Gestion de Maintenance Assistée par Ordinateur) pensée pour les PME et TPE : planification des interventions, suivi des actifs, gestion des équipes et conformité documentaire.",
+    challenge:
+      "Les PME et TPE industrielles gèrent encore leur maintenance de façon réactive et manuelle (tableurs, papier, appels téléphoniques), ce qui génère des pannes coûteuses, des pertes de pièces et une absence de traçabilité. Les solutions GMAO existantes sont trop complexes et trop chères pour ces structures.",
+    solution:
+      "Développement d'une plateforme GMAO web accessible depuis tout navigateur, avec gestion multi-utilisateurs et multi-rôles, module de planification des interventions et calendrier intelligent, suivi temps réel des SLA et indicateurs de performance, gestion du parc d'actifs (équipements, stocks, pièces, historiques), et export de rapports de conformité certifiables.",
+    results: [
+      "Plateforme en production — accessible sur mabk-erp.com",
+      "Planification des interventions avec calendrier et alertes automatiques",
+      "Suivi temps réel des équipements et indicateurs de maintenance",
+      "Gestion multi-rôles : administrateur, technicien, responsable",
+      "Rapports de conformité exportables pour audits et certifications",
+    ],
+    technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Tailwind CSS", "Vercel"],
+    href: "https://mabk-erp.com/login",
+  },
+  {
     id: "mabk-cafe",
     image: "/images/project-mabk-cafe.png",
     imageAlt: "Site web MAB-K Café — Café de spécialité Paris 11e",

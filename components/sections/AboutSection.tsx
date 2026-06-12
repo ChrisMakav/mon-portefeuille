@@ -19,10 +19,10 @@ export function AboutSection() {
           <div className="flex flex-col gap-6 reveal">
             <div className="relative aspect-[4/3] rounded-2xl bg-surface border border-line-strong overflow-hidden">
               <Image
-                src="/images/portrait1.jpg"
+                src="/images/bureau2.png"
                 alt="Rachide Mabila — Ingénieur Chef de Projet & Expert Digital"
                 fill
-                className="object-cover object-top"
+                className="object-cover object-center"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>

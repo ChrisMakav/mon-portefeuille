@@ -4,7 +4,7 @@ export interface ExpertiseCardProps {
   iconName: string;
   title: string;
   description: string;
-  problemsSolved: string[];
+  problemsSolved: readonly string[] | string[];
 }
 
 export function ExpertiseCard({

@@ -12,26 +12,10 @@ import { FAQSection } from "@/components/sections/FAQSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 
-const navLinks = [
-  { label: "Accueil", href: "#home" },
-  { label: "À Propos", href: "#about" },
-  { label: "Expertise", href: "#expertise" },
-  { label: "Services", href: "#services" },
-  { label: "Projets", href: "#portfolio" },
-  { label: "Méthode", href: "#methode" },
-  { label: "Résultats", href: "#resultats" },
-  { label: "FAQ", href: "#faq" },
-];
-
 export default function Home() {
   return (
     <>
-      <Nav
-        links={navLinks}
-        ctaLabel="Me Contacter"
-        ctaHref="#contact"
-        brandName="R.M."
-      />
+      <Nav brandName="R.M." />
       <main>
         <HeroSection />
         <AboutSection />

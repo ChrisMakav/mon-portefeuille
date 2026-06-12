@@ -1,17 +1,19 @@
+"use client";
+
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
 import { testimonials } from "@/lib/data/testimonials";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function TestimonialsSection() {
+  const { tr } = useLanguage();
   const [featured, ...rest] = testimonials;
 
   return (
     <section id="temoignages" className="py-section bg-void">
       <div className="max-w-7xl mx-auto px-container">
-        <SectionHeader label="Ils Témoignent" heading="Ce Qu'ils Disent" />
-
+        <SectionHeader label={tr.testimonials.label} heading={tr.testimonials.heading} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
-          {/* Featured testimonial — spans 2 columns on md+ */}
           <div className="md:col-span-2 lg:col-span-1">
             <TestimonialCard
               quote={featured.quote}
@@ -20,7 +22,6 @@ export function TestimonialsSection() {
               avatarSrc={featured.avatarSrc}
             />
           </div>
-
           {rest.map((t) => (
             <TestimonialCard
               key={t.id}

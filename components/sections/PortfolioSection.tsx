@@ -6,18 +6,16 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { projects, type Project } from "@/lib/data/projects";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const categories = ["Tous", ...Array.from(new Set(projects.map((p) => p.category)))];
-
-function ProjectThumbnail({ project, onExpand }: { project: Project; onExpand: () => void }) {
+function ProjectThumbnail({ project, onExpand, caseStudyLabel }: { project: Project; onExpand: () => void; caseStudyLabel: string }) {
   return (
     <article className="group rounded-xl overflow-hidden bg-surface border border-line shadow-sm transition-all duration-[200ms] hover:-translate-y-0.5 hover:border-accent flex flex-col">
-      {/* Image placeholder */}
       <button
         type="button"
         className="relative aspect-video bg-surface-raised overflow-hidden flex items-center justify-center w-full border-0 cursor-pointer"
         onClick={onExpand}
-        aria-label={`Voir l'étude de cas : ${project.title}`}
+        aria-label={`${caseStudyLabel}: ${project.title}`}
       >
         {project.image && !project.image.includes("placeholder") ? (
           <Image
@@ -56,7 +54,7 @@ function ProjectThumbnail({ project, onExpand }: { project: Project; onExpand: (
           onClick={onExpand}
           className="inline-flex items-center gap-1 font-sans text-sm text-fg-muted transition-colors duration-[200ms] group-hover:text-accent hover:text-accent mt-auto pt-1 cursor-pointer border-0 bg-transparent p-0"
         >
-          Voir l&apos;étude de cas →
+          {caseStudyLabel}
         </button>
       </div>
     </article>
@@ -66,9 +64,11 @@ function ProjectThumbnail({ project, onExpand }: { project: Project; onExpand: (
 function CaseStudyModal({
   project,
   onClose,
+  labels,
 }: {
   project: Project | null;
   onClose: () => void;
+  labels: { challenge: string; solution: string; results: string; technologies: string; viewProject: string; close: string; ariaClose: string };
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -117,26 +117,23 @@ function CaseStudyModal({
               type="button"
               onClick={onClose}
               className="shrink-0 text-fg-subtle hover:text-fg transition-colors duration-[200ms] text-2xl leading-none p-1 cursor-pointer border-0 bg-transparent"
-              aria-label="Fermer"
+              aria-label={labels.ariaClose}
             >
               ✕
             </button>
           </div>
 
-          {/* Content */}
           <div className="flex flex-col gap-5">
             <div>
-              <p className="font-mono text-label uppercase tracking-widest text-accent mb-2">Défi</p>
+              <p className="font-mono text-label uppercase tracking-widest text-accent mb-2">{labels.challenge}</p>
               <p className="font-sans text-sm text-fg-muted leading-relaxed">{project.challenge}</p>
             </div>
-
             <div>
-              <p className="font-mono text-label uppercase tracking-widest text-accent mb-2">Solution</p>
+              <p className="font-mono text-label uppercase tracking-widest text-accent mb-2">{labels.solution}</p>
               <p className="font-sans text-sm text-fg-muted leading-relaxed">{project.solution}</p>
             </div>
-
             <div>
-              <p className="font-mono text-label uppercase tracking-widest text-accent mb-3">Résultats</p>
+              <p className="font-mono text-label uppercase tracking-widest text-accent mb-3">{labels.results}</p>
               <ul className="flex flex-col gap-2">
                 {project.results.map((result, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -146,27 +143,23 @@ function CaseStudyModal({
                 ))}
               </ul>
             </div>
-
             {project.technologies.length > 0 && (
               <div>
-                <p className="font-mono text-label uppercase tracking-widest text-accent mb-3">Technologies</p>
+                <p className="font-mono text-label uppercase tracking-widest text-accent mb-3">{labels.technologies}</p>
                 <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <Badge key={tech}>{tech}</Badge>
-                  ))}
+                  {project.technologies.map((tech) => <Badge key={tech}>{tech}</Badge>)}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Footer */}
           <div className="flex gap-3 pt-2 border-t border-line">
             {project.href && (
               <a href={project.href} target="_blank" rel="noopener noreferrer">
-                <Button variant="primary" size="sm">Voir le projet →</Button>
+                <Button variant="primary" size="sm">{labels.viewProject}</Button>
               </a>
             )}
-            <Button variant="secondary" size="sm" onClick={onClose}>Fermer</Button>
+            <Button variant="secondary" size="sm" onClick={onClose}>{labels.close}</Button>
           </div>
         </div>
       )}
@@ -175,20 +168,24 @@ function CaseStudyModal({
 }
 
 export function PortfolioSection() {
-  const [activeCategory, setActiveCategory] = useState("Tous");
+  const { tr } = useLanguage();
+  const { portfolio } = tr;
+  const allLabel = portfolio.all;
+  const categories = [allLabel, ...Array.from(new Set(projects.map((p) => p.category)))];
+
+  const [activeCategory, setActiveCategory] = useState<string>(allLabel);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filtered =
-    activeCategory === "Tous"
+    activeCategory === allLabel
       ? projects
       : projects.filter((p) => p.category === activeCategory);
 
   return (
     <section id="portfolio" className="py-section bg-surface">
       <div className="max-w-7xl mx-auto px-container">
-        <SectionHeader label="Réalisations" heading="Mes Projets" />
+        <SectionHeader label={portfolio.label} heading={portfolio.heading} />
 
-        {/* Filter row */}
         <div className="flex flex-wrap gap-2 mb-10 justify-center">
           {categories.map((cat) => (
             <button
@@ -207,22 +204,30 @@ export function PortfolioSection() {
           ))}
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
           {filtered.map((project) => (
             <ProjectThumbnail
               key={project.id}
               project={project}
               onExpand={() => setSelectedProject(project)}
+              caseStudyLabel={portfolio.caseStudy}
             />
           ))}
         </div>
       </div>
 
-      {/* Case study modal */}
       <CaseStudyModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
+        labels={{
+          challenge: portfolio.challenge,
+          solution: portfolio.solution,
+          results: portfolio.results,
+          technologies: portfolio.technologies,
+          viewProject: portfolio.viewProject,
+          close: portfolio.close,
+          ariaClose: portfolio.ariaClose,
+        }}
       />
     </section>
   );

@@ -26,7 +26,6 @@ export { TestimonialCard } from "./TestimonialCard";
 export type { TestimonialCardProps } from "./TestimonialCard";
 
 export { Nav } from "./Nav";
-export type { NavProps } from "./Nav";
 
 export { SectionHeader } from "./SectionHeader";
 export { ExpertiseCard } from "./ExpertiseCard";

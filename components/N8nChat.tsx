@@ -171,6 +171,7 @@ export function N8nChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [listening, setListening] = useState(false);
+  const userInteracted = useRef(false);
 
   const sessionId = useRef(
     typeof crypto !== "undefined" ? crypto.randomUUID() : Math.random().toString(36)
@@ -179,6 +180,14 @@ export function N8nChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
+
+  // Auto-open after 30 s if the user hasn't manually toggled the chat
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!userInteracted.current) setOpen(true);
+    }, 30_000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Inject global CSS once
   useEffect(() => {
@@ -305,7 +314,7 @@ export function N8nChat() {
       {/* Toggle button */}
       <button
         className="makav-chat-toggle"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => { userInteracted.current = true; setOpen((v) => !v); }}
         aria-label={open ? "Fermer le chat" : "Ouvrir l'assistant"}
         title={open ? "Fermer" : "Assistant MAKAV"}
       >
@@ -326,7 +335,7 @@ export function N8nChat() {
               </div>
             </div>
             <button
-              onClick={() => setOpen(false)}
+              onClick={() => { userInteracted.current = true; setOpen(false); }}
               style={{ background: "none", border: "none", cursor: "pointer", color: "#7A8694", padding: 4, lineHeight: 0 }}
               aria-label="Fermer"
             >

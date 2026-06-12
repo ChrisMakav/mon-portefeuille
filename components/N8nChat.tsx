@@ -126,12 +126,12 @@ const STYLE_OVERRIDES = `
     color: #C1FF2F;
   }
   #makav-mic-btn.listening {
-    color: #C1FF2F;
-    animation: mic-pulse 1.2s ease-in-out infinite;
+    color: #ff4d4d;
+    animation: mic-pulse 0.9s ease-in-out infinite;
   }
   @keyframes mic-pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
+    0%, 100% { opacity: 1;   transform: scale(1);    }
+    50%       { opacity: 0.5; transform: scale(1.2);  }
   }
 `;
 
@@ -197,26 +197,58 @@ export function N8nChat() {
     let recognition: SR = null;
     let isListening = false;
 
+    // Always re-query to avoid stale references after Vue re-renders
+    function getField(): HTMLTextAreaElement | HTMLInputElement | null {
+      const inputArea = document.querySelector<HTMLElement>('[class*="chat-input"]');
+      if (!inputArea) return null;
+      return (
+        inputArea.querySelector<HTMLTextAreaElement>("textarea") ??
+        inputArea.querySelector<HTMLInputElement>('input[type="text"]') ??
+        inputArea.querySelector<HTMLInputElement>("input") ??
+        null
+      );
+    }
+
+    // Insert transcript using execCommand (works with Vue/React/contenteditable)
+    // then falls back to native setter if execCommand isn't available
+    function applyTranscript(text: string) {
+      const field = getField();
+      if (!field) return;
+
+      field.focus();
+
+      // Select all existing content so we replace it with the transcript
+      field.setSelectionRange(0, field.value.length);
+
+      // execCommand goes through the browser's native input pipeline —
+      // Vue's v-model @input handler will pick it up correctly
+      const inserted = document.execCommand("insertText", false, text);
+
+      if (!inserted) {
+        // Fallback: native setter + synthetic InputEvent
+        const proto = field instanceof HTMLTextAreaElement
+          ? HTMLTextAreaElement.prototype
+          : HTMLInputElement.prototype;
+        Object.getOwnPropertyDescriptor(proto, "value")?.set?.call(field, text);
+        field.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: text }));
+        field.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
+
     function injectMicButton() {
       if (document.getElementById("makav-mic-btn")) return;
 
       const inputArea = document.querySelector<HTMLElement>('[class*="chat-input"]');
       if (!inputArea) return;
-
-      const field =
-        inputArea.querySelector<HTMLTextAreaElement>("textarea") ??
-        inputArea.querySelector<HTMLInputElement>('input[type="text"]') ??
-        inputArea.querySelector<HTMLInputElement>("input");
-      if (!field) return;
+      if (!getField()) return;
 
       const sendBtn = inputArea.querySelector<HTMLButtonElement>("button");
 
       const micBtn = document.createElement("button");
       micBtn.id = "makav-mic-btn";
       micBtn.type = "button";
-      micBtn.title = document.documentElement.lang === "en"
-        ? "Dictate a message"
-        : "Dicter un message";
+      const isEn = document.documentElement.lang === "en";
+      micBtn.title = isEn ? "Dictate a message" : "Dicter un message";
       micBtn.setAttribute("aria-label", micBtn.title);
       micBtn.innerHTML = MIC_SVG;
 
@@ -228,9 +260,9 @@ export function N8nChat() {
 
       micBtn.addEventListener("click", () => {
         const win = window as WinExt;
-        const SR = win.SpeechRecognition ?? win.webkitSpeechRecognition;
+        const SRCtor = win.SpeechRecognition ?? win.webkitSpeechRecognition;
 
-        if (!SR) {
+        if (!SRCtor) {
           alert(
             document.documentElement.lang === "en"
               ? "Speech recognition is not supported in this browser. Try Chrome or Edge."
@@ -244,11 +276,11 @@ export function N8nChat() {
           return;
         }
 
-        recognition = new SR();
-        recognition.lang =
-          document.documentElement.lang === "en" ? "en-US" : "fr-FR";
-        recognition.interimResults = false;
+        recognition = new SRCtor();
+        recognition.lang = document.documentElement.lang === "en" ? "en-US" : "fr-FR";
+        recognition.interimResults = true;  // show partial results in real time
         recognition.maxAlternatives = 1;
+        recognition.continuous = false;
 
         recognition.onstart = () => {
           isListening = true;
@@ -260,44 +292,35 @@ export function N8nChat() {
           micBtn.classList.remove("listening");
         };
 
-        recognition.onerror = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        recognition.onerror = (e: any) => {
           isListening = false;
           micBtn.classList.remove("listening");
+          if (e.error === "not-allowed" || e.error === "permission-denied") {
+            alert(
+              document.documentElement.lang === "en"
+                ? "Microphone access was denied. Please allow microphone access in your browser settings."
+                : "L'accès au microphone a été refusé. Autorisez l'accès au microphone dans les paramètres du navigateur."
+            );
+          }
         };
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognition.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript;
-
-          // Force React/Vue internal state to update via native setter
-          if (field instanceof HTMLTextAreaElement) {
-            Object.getOwnPropertyDescriptor(
-              HTMLTextAreaElement.prototype,
-              "value"
-            )?.set?.call(field, transcript);
-          } else {
-            Object.getOwnPropertyDescriptor(
-              HTMLInputElement.prototype,
-              "value"
-            )?.set?.call(field, transcript);
+          // Build the current best transcript (final + last interim)
+          let transcript = "";
+          for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
           }
-
-          field.dispatchEvent(new Event("input", { bubbles: true }));
-          field.dispatchEvent(new Event("change", { bubbles: true }));
-          field.focus();
+          if (transcript) applyTranscript(transcript);
         };
 
         recognition.start();
       });
     }
 
-    // Watch for the chat window / input area to be inserted into the DOM
-    const observer = new MutationObserver(() => {
-      injectMicButton();
-    });
+    const observer = new MutationObserver(() => injectMicButton());
     observer.observe(document.body, { childList: true, subtree: true });
-
-    // Try immediately (if the widget renders synchronously)
     injectMicButton();
 
     return () => {

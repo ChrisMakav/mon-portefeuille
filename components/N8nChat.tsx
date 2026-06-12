@@ -5,7 +5,6 @@ import { useEffect } from "react";
 const WEBHOOK_URL = process.env.NEXT_PUBLIC_CHAT_WEBHOOK_URL ?? "";
 const CDN = "https://cdn.jsdelivr.net/npm/@n8n/chat@1.24.2/dist";
 
-// CSS overrides injected AFTER the CDN stylesheet so our variables win
 const STYLE_OVERRIDES = `
   :root {
     --chat--color--primary:             #C1FF2F;
@@ -106,24 +105,52 @@ const STYLE_OVERRIDES = `
     overflow-y: auto !important;
     max-height: calc(var(--chat--window--height) - 180px) !important;
   }
+
+  /* ── Dictaphone button ── */
+  #makav-mic-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0 8px;
+    color: #7A8694;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: color 0.2s ease;
+    margin-right: 2px;
+    line-height: 0;
+  }
+  #makav-mic-btn:hover {
+    color: #C1FF2F;
+  }
+  #makav-mic-btn.listening {
+    color: #C1FF2F;
+    animation: mic-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes mic-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
 `;
 
+const MIC_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>`;
+
 export function N8nChat() {
+  // ── n8n CDN widget ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (!WEBHOOK_URL) return;
 
-    // 1. CDN stylesheet
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = `${CDN}/style.css`;
     document.head.appendChild(link);
 
-    // 2. Our overrides come AFTER the CDN CSS in DOM order → they win
     const style = document.createElement("style");
     style.innerHTML = STYLE_OVERRIDES;
     document.head.appendChild(style);
 
-    // 3. ES module script — loads widget from CDN, no webpack involved
     const script = document.createElement("script");
     script.type = "module";
     script.innerHTML = `
@@ -156,6 +183,127 @@ export function N8nChat() {
       document.head.removeChild(link);
       document.head.removeChild(style);
       document.body.removeChild(script);
+    };
+  }, []);
+
+  // ── Dictaphone injection ────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!WEBHOOK_URL) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    type SR = any;
+    type WinExt = Window & { SpeechRecognition?: new () => SR; webkitSpeechRecognition?: new () => SR };
+
+    let recognition: SR = null;
+    let isListening = false;
+
+    function injectMicButton() {
+      if (document.getElementById("makav-mic-btn")) return;
+
+      const inputArea = document.querySelector<HTMLElement>('[class*="chat-input"]');
+      if (!inputArea) return;
+
+      const field =
+        inputArea.querySelector<HTMLTextAreaElement>("textarea") ??
+        inputArea.querySelector<HTMLInputElement>('input[type="text"]') ??
+        inputArea.querySelector<HTMLInputElement>("input");
+      if (!field) return;
+
+      const sendBtn = inputArea.querySelector<HTMLButtonElement>("button");
+
+      const micBtn = document.createElement("button");
+      micBtn.id = "makav-mic-btn";
+      micBtn.type = "button";
+      micBtn.title = document.documentElement.lang === "en"
+        ? "Dictate a message"
+        : "Dicter un message";
+      micBtn.setAttribute("aria-label", micBtn.title);
+      micBtn.innerHTML = MIC_SVG;
+
+      if (sendBtn) {
+        sendBtn.parentNode?.insertBefore(micBtn, sendBtn);
+      } else {
+        inputArea.appendChild(micBtn);
+      }
+
+      micBtn.addEventListener("click", () => {
+        const win = window as WinExt;
+        const SR = win.SpeechRecognition ?? win.webkitSpeechRecognition;
+
+        if (!SR) {
+          alert(
+            document.documentElement.lang === "en"
+              ? "Speech recognition is not supported in this browser. Try Chrome or Edge."
+              : "La reconnaissance vocale n'est pas supportée dans ce navigateur. Essayez Chrome ou Edge."
+          );
+          return;
+        }
+
+        if (isListening && recognition) {
+          recognition.stop();
+          return;
+        }
+
+        recognition = new SR();
+        recognition.lang =
+          document.documentElement.lang === "en" ? "en-US" : "fr-FR";
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+          isListening = true;
+          micBtn.classList.add("listening");
+        };
+
+        recognition.onend = () => {
+          isListening = false;
+          micBtn.classList.remove("listening");
+        };
+
+        recognition.onerror = () => {
+          isListening = false;
+          micBtn.classList.remove("listening");
+        };
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        recognition.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+
+          // Force React/Vue internal state to update via native setter
+          if (field instanceof HTMLTextAreaElement) {
+            Object.getOwnPropertyDescriptor(
+              HTMLTextAreaElement.prototype,
+              "value"
+            )?.set?.call(field, transcript);
+          } else {
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value"
+            )?.set?.call(field, transcript);
+          }
+
+          field.dispatchEvent(new Event("input", { bubbles: true }));
+          field.dispatchEvent(new Event("change", { bubbles: true }));
+          field.focus();
+        };
+
+        recognition.start();
+      });
+    }
+
+    // Watch for the chat window / input area to be inserted into the DOM
+    const observer = new MutationObserver(() => {
+      injectMicButton();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Try immediately (if the widget renders synchronously)
+    injectMicButton();
+
+    return () => {
+      observer.disconnect();
+      recognition?.abort();
+      document.getElementById("makav-mic-btn")?.remove();
     };
   }, []);
 

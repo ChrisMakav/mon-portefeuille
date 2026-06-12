@@ -8,6 +8,31 @@ import { Button } from "@/components/ui/Button";
 import { projects, type Project } from "@/lib/data/projects";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+type ProjectTranslation = {
+  category: string;
+  title: string;
+  imageAlt: string;
+  summary: string;
+  challenge: string;
+  solution: string;
+  results: readonly string[];
+};
+
+function localizeProject(project: Project, pd: Record<string, ProjectTranslation>): Project {
+  const trans = pd[project.id];
+  if (!trans) return project;
+  return {
+    ...project,
+    category: trans.category,
+    title: trans.title,
+    imageAlt: trans.imageAlt,
+    summary: trans.summary,
+    challenge: trans.challenge,
+    solution: trans.solution,
+    results: trans.results as string[],
+  };
+}
+
 function ProjectThumbnail({ project, onExpand, caseStudyLabel }: { project: Project; onExpand: () => void; caseStudyLabel: string }) {
   return (
     <article className="group rounded-xl overflow-hidden bg-surface border border-line shadow-sm transition-all duration-[200ms] hover:-translate-y-0.5 hover:border-accent flex flex-col">
@@ -168,18 +193,26 @@ function CaseStudyModal({
 }
 
 export function PortfolioSection() {
-  const { tr } = useLanguage();
+  const { tr, lang } = useLanguage();
   const { portfolio } = tr;
   const allLabel = portfolio.all;
-  const categories = [allLabel, ...Array.from(new Set(projects.map((p) => p.category)))];
+
+  const pd = tr.projectsData as Record<string, ProjectTranslation>;
+  const localizedProjects = projects.map((p) => localizeProject(p, pd));
+  const categories = [allLabel, ...Array.from(new Set(localizedProjects.map((p) => p.category)))];
 
   const [activeCategory, setActiveCategory] = useState<string>(allLabel);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+  useEffect(() => {
+    setActiveCategory(allLabel);
+    setSelectedProject(null);
+  }, [lang, allLabel]);
+
   const filtered =
     activeCategory === allLabel
-      ? projects
-      : projects.filter((p) => p.category === activeCategory);
+      ? localizedProjects
+      : localizedProjects.filter((p) => p.category === activeCategory);
 
   return (
     <section id="portfolio" className="py-section bg-surface">
@@ -207,7 +240,7 @@ export function PortfolioSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
           {filtered.map((project) => (
             <ProjectThumbnail
-              key={project.id}
+              key={`${project.id}-${lang}`}
               project={project}
               onExpand={() => setSelectedProject(project)}
               caseStudyLabel={portfolio.caseStudy}

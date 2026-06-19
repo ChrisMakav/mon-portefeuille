@@ -211,9 +211,12 @@ export function N8nChat() {
     ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`;
   }, [input]);
 
-  // Restore focus after bot reply
+  // Restore focus after bot reply (defer so disabled→enabled DOM update completes first)
   useEffect(() => {
-    if (!loading) textareaRef.current?.focus();
+    if (!loading) {
+      const id = setTimeout(() => textareaRef.current?.focus(), 50);
+      return () => clearTimeout(id);
+    }
   }, [loading]);
 
   // ── Send message ──────────────────────────────────────────────────────────

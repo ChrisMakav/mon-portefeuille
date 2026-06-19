@@ -34,7 +34,7 @@ export function ResultsSection() {
             <div className="text-center lg:text-center">
               <p className="font-display text-4xl font-black uppercase text-fg mb-2">{results.ctaHeading}</p>
               <p className="font-sans text-sm text-fg-muted mb-6">{results.ctaSub}</p>
-              <a href="#contact">
+              <a href="https://n8n.srv1644260.hstgr.cloud/form/e6fa0f2e-dc0f-4eaa-9149-8d30be210a33" target="_blank" rel="noopener noreferrer">
                 <Button variant="primary" size="lg">{results.cta}</Button>
               </a>
             </div>

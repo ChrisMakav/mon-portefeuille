@@ -211,6 +211,11 @@ export function N8nChat() {
     ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`;
   }, [input]);
 
+  // Restore focus after bot reply
+  useEffect(() => {
+    if (!loading) textareaRef.current?.focus();
+  }, [loading]);
+
   // ── Send message ──────────────────────────────────────────────────────────
 
   const sendMessage = useCallback(async (text: string) => {
